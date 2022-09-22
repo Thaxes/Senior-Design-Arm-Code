@@ -1,2 +1,18 @@
-# Senior-Design-Arm-Code
-Mechanical arm, not the architecture.
+SFLPoly Rover Shoulder Joint Code
+======
+## Control rod
+Description
+
+---
+## The Back End
+Description
+
+---
+## DMB
+Description
+
+---
+## DMM
+Description
+
+---

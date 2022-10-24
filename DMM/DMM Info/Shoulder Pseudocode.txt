@@ -1,0 +1,72 @@
+#include <ros.h>
+#include <std_msgs/String.h>
+#include <std_msgs/UInt16.h>
+
+// The above headers are necessary for utilizing ROS
+
+#define STEPpin 1
+#define DIRpin 2
+
+// define which pins the stepper controller is connected to
+
+ros node handle: DMM;
+name of Sring messages: STEP_msg;	
+
+void UP()	  // Spin the stepper motor 1 revolution slowly:
+{
+digitalWrite(dirPin, HIGH);
+
+  for (int i = 0; i < stepsPerRevolution; i++) {
+    // These four lines result in 1 step:
+    digitalWrite(stepPin, HIGH);
+    delayMicroseconds(2000);
+    digitalWrite(stepPin, LOW);
+    delayMicroseconds(2000);
+}
+
+void DOWN()  // Spin the stepper motor 1 revolution slowly:
+{
+ digitalWrite(dirPin, LOW);
+
+  for (int i = 0; i < stepsPerRevolution; i++) {
+    // These four lines result in 1 step:
+    digitalWrite(stepPin, HIGH);
+    delayMicroseconds(2000);
+    digitalWrite(stepPin, LOW);
+    delayMicroseconds(2000);
+}
+
+void STOP()	// Stops the motor:
+{
+	digitalWrite(stepPin, LOW);
+}
+
+// This function is called when data is received on the arduino from the ros system, using the passed message as an argument
+SubscriberCallback(const String messages& STEP_msg)
+{
+if ControlRod message data exists
+	if button pressed equals UP
+		call UP function;
+	else if button pressed equals down
+		call DOWN function;
+	else	
+		call STOP function;
+}
+
+//This line defines how being a subscriber to ControlRod_subscriber is handled; Pass any ros data to the above function
+ros::Subscriber<std_msgs::String> ControlRod_subscriber("ControlRod", &subscriberCallback);
+
+
+Setup()
+{
+Set both pins as OUTPUT;
+create node DMM();
+DMM node subscribes to ControlRod.
+}
+
+loop()
+{
+
+DMM.spinOnce(); // The node checks for messages on its subscribed topic(s)
+delay(100); // delay loop by 100 ms. change this value as needed to get real-time control over the shoulder
+}

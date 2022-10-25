@@ -3,26 +3,31 @@ import socket
 import json
 app = Flask(__name__)
 
+host = '10.42.0.1'  # as both code is running on same pc
+port = 5000  # socket server port number
+
+client_socket = socket.socket()  # instantiate
+client_socket.connect((host, port))  # connect to the server
+
+
+def talker(res):
+    message = res
+    client_socket.send(message.encode())  # send message
+
 
 @app.route('/')
 def hello_world():
-    payload = {
-        "direction": "null",
-        "amount": "null"
-    }
+    payload = "me"
+    talker(payload)
     # converting the payload to a json format for the response
     res = json.dumps(payload)
-    print(res)  # replace this line with ROS comms
-    # will need to figure out subscriber publisher for communication with ROS
     return res
 
 
 @app.route('/up')
 def shoulderUp():
-    payload = {
-        "direction": "up",
-        "amount": "1"
-    }
+    payload = "w"
+    talker(payload)
     # converting the payload to a json format for the response
     res = json.dumps(payload)
     return res
@@ -30,10 +35,8 @@ def shoulderUp():
 
 @app.route('/down')
 def shoulderDown():
-    payload = {
-        "direction": "down",
-        "amount": "1"
-    }
+    payload = "s"
+    talker(payload)
     # converting the payload to a json format for the response
     res = json.dumps(payload)
     return res
@@ -41,28 +44,16 @@ def shoulderDown():
 
 @app.route('/stop')
 def shoulderStop():
-    payload = {
-        "direction": "null",
-        "amount": "0"
-    }
+    payload = "x"
+    talker(payload)
     # converting the payload to a json format for the response
     res = json.dumps(payload)
     return res
 
 
-# Below is the code given by Jacob as the sub to the pubsub
-# def client_program():
-#     host = 'ubuntu'  # as both code is running on same pc
-#     port = 5000  # socket server port number
-
-#     client_socket = socket.socket()  # instantiate
-#     client_socket.connect((host, port))  # connect to the server
-
-#     message = input(" -> ")  # take input
-
-#     while message.lower().strip() != 'bye':
-#         client_socket.send(message.encode())  # send message
-
-#         message = input(" -> ")  # again take input
-
-#     client_socket.close()  # close the connection
+@app.route('/end')
+def endShoulder():
+    client_socket.close()
+    payload = "Goodnight"
+    res = json.dumps(payload)
+    return res

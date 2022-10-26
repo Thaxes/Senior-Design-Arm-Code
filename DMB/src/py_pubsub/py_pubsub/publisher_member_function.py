@@ -1,17 +1,3 @@
-# Copyright 2016 Open Source Robotics Foundation, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import rclpy
 from rclpy.node import Node
 import time
@@ -19,69 +5,55 @@ from std_msgs.msg import String
 import socket
 
 
-class MinimalPublisher(Node):
+class MinimalPublisher(Node):   # class provided by ros2
 
     def __init__(self):
-        super().__init__('minimal_publisher')
-        self.publisher_ = self.create_publisher(String, 'Shoulder', 10)
+        super().__init__('minimal_publisher')   # name of class
+        self.publisher_ = self.create_publisher(String, 'Shoulder', 10) #Defines publishing variable type, topic to publish to, and ?
         timer_period = 0.5  # seconds
-        self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.i = 2
-        # get the hostname
+        self.timer = self.create_timer(timer_period, self.timer_callback) #creates a timer using the timer_period as the time before triggering,
+                                                                        # and calls the timer_callback function once that time has elapsed.
 
-    host = socket.gethostname()
-    port = 5000  # initiate port no above 1024
+    host = socket.gethostname() #Gets the name of the computer. When DNS is not available, manually input the host's ipv4 address in ticks '10.42.0.1'
+    port = 5000  # use any number above 1024. Some ports are "assigned" services, 
+                    #keep in mind for security purposes that a bot may connect to any available port 22, etc.
 
-    server_socket = socket.socket()  # get instance
-    # look closely. The bind() function takes tuple as argument
+    server_socket = socket.socket()  # creates the socket used for networking
     server_socket.bind((host, port))  # bind host address and port together
 
-    # configure how many client the server can listen simultaneously
-    server_socket.listen(2)
+    server_socket.listen(2)     # Two connections are allowed for testing purposes; later it will be reduced to one.
     conn, address = server_socket.accept()  # accept new connection
 
 
-    def timer_callback(self):
+    def timer_callback(self):   # This def is executed every .5 seconds, the timer_period
 
-        print("Connection from: " + str(self.address))
-        while True:
-            # receive data stream. it won't accept data packet greater than 1024 bytes
-            data = self.conn.recv(2).decode()
-            if not data:
-                # if data is not received break
+        print("Connection from: " + str(self.address))  # Shows the ip address that connects.
+        while True: # This vague line actually means "while connection is active"
+            data = self.conn.recv(2).decode() # receives data stream. Can only receive two bytes per packet.
+            if not data:  
+                # if data is not received break. This is necessary becase it must continue checking for new data
                 break
-            msg = String()
-            msg.data = str(data)
-            self.publisher_.publish(msg)
-            self.get_logger().info('Publishing: "%s"' % msg.data)
+            msg = String()  # define msg as a string0
+            msg.data = str(data)    # pass the data to msg.data because otherwise it would redefine itself as an int.
+            self.publisher_.publish(msg)    # publishes the msg variable on the Shoulder topic.
+            self.get_logger().info('Publishing: "%s"' % msg.data)   # Outputs the value of the data being published.
             #conn.send(data.encode())  # send data to the client
 
-        self.conn.close()  # close the connection        
-
-        #if (self.i == 2):
-        #   self.i = 1
-        #else:
-        #    self.i = 2
-        #msg = String()
-        #msg.data = str(self.i)
-        #self.publisher_.publish(msg)
-        #self.get_logger().info('Publishing: "%s"' % msg.data)
-        #time.sleep(1)
-        
+        self.conn.close()  # close the connection. Currently this causes the object to crash
 
 
 def main(args=None):
-    rclpy.init(args=args)
+    rclpy.init(args=args)   # ros2 magic; must be called before creating a node
 
-    minimal_publisher = MinimalPublisher()
+    minimal_publisher = MinimalPublisher()  # create object of the above class
 
-    rclpy.spin(minimal_publisher)
+    rclpy.spin(minimal_publisher)   # spinning the object calls its defs
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    minimal_publisher.destroy_node()
-    rclpy.shutdown()
+    minimal_publisher.destroy_node()    # Destroys the object
+    rclpy.shutdown()    # ends the ros2 global executor
 
 
 if __name__ == '__main__':

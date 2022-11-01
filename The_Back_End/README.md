@@ -1,10 +1,16 @@
 CD into \The_Back_End\
+
+If you are on Windows
 Then run the following commands
 
-'Scripts\activate'
+'python -m venv .venv'
 
-set FLASK_APP=base.py
+'./.venv/Scripts\activate'
 
-$env:FLASK_APP = "base.py"
+'pip install flask' (This should take a second)
 
-flask run
+'set FLASK_APP=base.py'
+
+'$env:FLASK_APP = "base.py"'
+
+'flask run'

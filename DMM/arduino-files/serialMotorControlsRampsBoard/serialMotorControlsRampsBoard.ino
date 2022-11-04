@@ -4,6 +4,7 @@
 #define X_ENABLE_PIN 38
 const unsigned long M = 100000; //microseconds
 const int stepsPerRevolution = 400; //steps per revolution
+const int stepsPerNintey = 27000;
 
 unsigned long D2 = 200; //used as x in calculating acceleration delay f(x) = 1microsecond/x
 char state;   //input from serialmonitor
@@ -36,6 +37,28 @@ void CLOCK()  //Rotate motor clockwise
 }
 }
 
+void AccelCOUNTER90() //Rotate motor counterclockwise with acceleration
+{
+ digitalWrite(dirPin, HIGH);
+  // Spin the stepper motor 1 revolution with acceleration:
+  
+  for (int i = 0; i < stepsPerNintey / 25; i++) { //divide stepsPerRevolution by the number of steps taken in the nested loop.
+    unsigned long delay2 = 1000000UL/D2;  //calculate a fraction
+    if (D2 < 2500) //if x has not reached 2000, increment
+    {
+      D2 += 50;
+    }
+    else if (D2 > 2500)  //if x has reached 2500, do not increment any more.
+    {
+      D2 = 2500;
+    }
+      for (int j = 0; j <= 25; j++) //take 25 steps
+    {
+      step(delay2);
+    }   
+}
+}
+
 void AccelCOUNTER() //Rotate motor counterclockwise with acceleration
 {
  digitalWrite(dirPin, HIGH);
@@ -45,13 +68,9 @@ void AccelCOUNTER() //Rotate motor counterclockwise with acceleration
     unsigned long delay2 = 1000000UL/D2;  //calculate a fraction
     if (D2 < 2000) //if x has not reached 2000, increment
     {
-      D2 += 100;
-    }
-    else if (D2 < 2500) //if x has reached 500 but not 2500, increment but less
-    {
       D2 += 50;
     }
-    else if (D2 >= 2500)  //if x has reached 2500, do not increment any more.
+    else if (D2 > 2500)  //if x has reached 2500, do not increment any more.
     {
       D2 = 2500;
     }
@@ -112,6 +131,12 @@ void loop() {
         Serial.println("Received: ");
         Serial.println(state);
         AccelCLOCK();
+      }
+      else if (state == 'n') //if serial character is s, accelerate clockwise
+      {
+        Serial.println("Received: ");
+        Serial.println(state);
+        AccelCOUNTER90();
       }
       else  //else, print the serial character and do nothing
       {

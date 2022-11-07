@@ -10,8 +10,9 @@ for x in range(0, 3): # try 3 times, then stop trying to connect
         port = 5000  # socket server port number
         client_socket = socket.socket()  # instantiate
         client_socket.connect((host, port))  # connect to the server
-    except Exception as err:
-        pass
+        err = None
+    except Exception as e:
+        err = str(e)
         # [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
     if err:
         time.sleep(30) # sleep 30 seconds before attempting to reconnect

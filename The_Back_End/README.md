@@ -5,7 +5,7 @@ Then run the following commands
 
 'python -m venv .venv'
 
-'./.venv/Scripts/activate'
+'.venv/Scripts/activate'
 
 'pip install flask' (This should take a second)
 

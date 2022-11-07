@@ -12,12 +12,9 @@ This is meant to help start the backend on your local machine ( with windows com
 
 CD into \The_Back_End\
 
-If you are on Windows
-Then run the following commands
-
 'python -m venv .venv'
 
-'./.venv/Scripts\activate'
+'.venv/Scripts/activate'
 
 'pip install flask' (This should take a second)
 

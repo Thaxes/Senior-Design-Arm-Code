@@ -5,7 +5,7 @@ import json
 
 app = Flask(__name__)
 
-for x in range(0, 3): # try 3 times, then stop trying to connect
+while True: # I want the attempts to appear like a log graph
     try:
         host = '10.42.0.1'  # as both code is running on same pc
         port = 5000  # socket server port number
@@ -30,49 +30,46 @@ def talker(res):
 @app.route('/')
 def hello_world():
     payload = {"tester": "me"}
-    talker(payload) # sending a message to the talker on the server we connected to above
+    response = json.dumps(payload)
+    talker(response) # sending a message to the talker on the server we connected to above
     # converting the payload to a json format for the response
-    res = json.dumps(payload)
-    return res
+    return response
 
 
 @app.route('/up')
 def shoulderUp():
     payload = {"shoulder": "w"}
-    talker(payload)
-    # converting the payload to a json format for the response
-    res = json.dumps(payload)
-    return res
+    response = json.dumps(payload)
+    talker(response)
+    return response
 
 
 @app.route('/down')
 def shoulderDown():
     payload = {"shoulder": "s"}
-    talker(payload)
-    # converting the payload to a json format for the response
-    res = json.dumps(payload)
-    return res
+    response = json.dumps(payload)
+    talker(response)
+    return response
 
 
 @app.route('/stop')
 def shoulderStop():
     payload = {"shoulder": "x"}
-    talker(payload)
-    # converting the payload to a json format for the response
-    res = json.dumps(payload)
-    return res
+    response = json.dumps(payload)
+    talker(response)
+    return response
 
 @app.route('/stop/wheel') # example json response for the wheel
 def wheelStop():
     payload = {"wheel": "x"}
-    talker(payload)
-    # converting the payload to a json format for the response
-    res = json.dumps(payload)
-    return res
+    response = json.dumps(payload)
+    talker(response)
+    return response
 
 @app.route('/end')
 def endShoulder():
-    client_socket.close()
     payload = {"tester": "goodnight"}
-    res = json.dumps(payload)
-    return res
+    response = json.dumps(payload)
+    talker(response)
+    client_socket.close()
+    return response

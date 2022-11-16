@@ -2,6 +2,7 @@ from flask import Flask
 import time
 import socket
 import json
+
 app = Flask(__name__)
 
 for x in range(0, 3): # try 3 times, then stop trying to connect
@@ -28,7 +29,7 @@ def talker(res):
 
 @app.route('/')
 def hello_world():
-    payload = "me"
+    payload = {"tester": "me"}
     talker(payload) # sending a message to the talker on the server we connected to above
     # converting the payload to a json format for the response
     res = json.dumps(payload)
@@ -37,7 +38,7 @@ def hello_world():
 
 @app.route('/up')
 def shoulderUp():
-    payload = "w"
+    payload = {"shoulder": "w"}
     talker(payload)
     # converting the payload to a json format for the response
     res = json.dumps(payload)
@@ -46,7 +47,7 @@ def shoulderUp():
 
 @app.route('/down')
 def shoulderDown():
-    payload = "s"
+    payload = {"shoulder": "s"}
     talker(payload)
     # converting the payload to a json format for the response
     res = json.dumps(payload)
@@ -55,16 +56,23 @@ def shoulderDown():
 
 @app.route('/stop')
 def shoulderStop():
-    payload = "x"
+    payload = {"shoulder": "x"}
     talker(payload)
     # converting the payload to a json format for the response
     res = json.dumps(payload)
     return res
 
+@app.route('/stop/wheel') # example json response for the wheel
+def wheelStop():
+    payload = {"wheel": "x"}
+    talker(payload)
+    # converting the payload to a json format for the response
+    res = json.dumps(payload)
+    return res
 
 @app.route('/end')
 def endShoulder():
     client_socket.close()
-    payload = "Goodnight"
+    payload = {"tester": "goodnight"}
     res = json.dumps(payload)
     return res

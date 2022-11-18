@@ -4,9 +4,8 @@ Open VS code
 Open terminal in VS code
 run the commands: 
 
-cd Control_Rod
-run npm install
-npm start # you can also use: npx expo start
+cd FrontEndNew
+npm start you can also use: npx expo start
 
 press "w" when prompted. 
 
@@ -21,6 +20,8 @@ press "w" when promted.
 If successful, continue onto press "a" for android if you already have an emulator or scan QR 
 with Expo Go app.
 
+Replace "App.JS" with my "App.JS" content. 
 
+This method will ensure that all dependencies and packages and installed correctly. 
 
 

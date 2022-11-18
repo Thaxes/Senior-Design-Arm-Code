@@ -21,14 +21,14 @@ class MinimalSubscriber(Node):
 
         #I'm assuming the latest message will be the one sent.
 
-        self.serial_send = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=.1)    # defines the port the arduino is on and the bitrate.
+        #self.serial_send = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=.1)    # defines the port the arduino is on and the bitrate.
 
         self.subscription  # prevent unused variable warning
         self.subscription2  # prevent unused variable warning
 
     def listener_callback(self, msg):   # passes objects self and msg to the def
         self.get_logger().info('I heard: "%s"' % msg.data) # outputs a strange amount of information currently
-        self.serial_send.write(bytes(msg.data,'utf-8')) # sends the msg.data information to the arduino
+       # self.serial_send.write(bytes(msg.data,'utf-8')) # sends the msg.data information to the arduino
         time.sleep(1)   # wait one second before ending. Due to being an ros node, it is called again immediately
 
 def main(args=None):

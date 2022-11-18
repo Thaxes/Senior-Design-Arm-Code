@@ -3,6 +3,7 @@ from rclpy.node import Node
 import time
 from std_msgs.msg import String
 import socket
+import json
 
 
 class MinimalPublisher(Node):   # class provided by ros2
@@ -32,15 +33,35 @@ class MinimalPublisher(Node):   # class provided by ros2
 
         print("Connection from: " + str(self.address))  # Shows the ip address that connects.
         while True: # This vague line actually means "while connection is active"
-            data = self.conn.recv(2).decode() # receives data stream. Can only receive two bytes per packet.
+            data = self.conn.recv(20).decode() # receives data stream. Can only receive two bytes per packet.
             if not data:  
                 # if data is not received break. This is necessary becase it must continue checking for new data
                 break
-            msg = String()  # define msg as a string0
-            msg.data = str(data)    # pass the data to msg.data because otherwise it would redefine itself as an int.
-            self.publisher_.publish(msg)    # publishes the msg variable on the Shoulder topic.
-            self.get_logger().info('Publishing: "%s"' % msg.data)
-            self.publisher_wheel.publish(msg)  
+
+            loads = json.loads(data)
+            key = sorted(loads)
+            msg = String() # define msg as a string0
+            #msg.data = key[0]
+            #self.get_logger().info('keys "%s"' % msg.data)
+
+            if (str(key[0]) == "tester"):   #See which topic it is publishing to
+                 msg.data = str(loads["tester"]) # pass the data to msg.data because otherwise it would redefine itself as an int.
+                 self.publisher_.publish(msg)    # publishes the msg variable on the Shoulder topic.
+                 self.get_logger().info('Test Publishing: "%s"' % msg.data)
+
+            #repeat above for all publishers
+            if (str(key[0]) == "shoulder"):   # pass the data to msg.data because otherwise it would redefine itself as an int.
+                 msg.data = str(loads["shoulder"]) 
+                 self.publisher_.publish(msg)    # publishes the msg variable on the Shoulder topic.
+                 self.get_logger().info('Shoulder Publishing: "%s"' % msg.data)
+
+                       
+            if (str(key[0]) == "wheel"):   # pass the data to msg.data because otherwise it would redefine itself as an int.
+                msg.data = str(loads["wheel"])    
+                self.publisher_wheel.publish(msg)  
+                self.get_logger().info('Wheel Publishing: "%s"' % msg.data)
+            
+            
             #self.get_logger().info('Publishing: "%s"' % msg.data)   # Outputs the value of the data being published.
             #conn.send(data.encode())  # send data to the client
 

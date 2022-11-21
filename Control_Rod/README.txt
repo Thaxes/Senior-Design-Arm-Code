@@ -19,9 +19,3 @@ press "w" when promted.
 
 If successful, continue onto press "a" for android if you already have an emulator or scan QR 
 with Expo Go app.
-
-Replace "App.JS" with my "App.JS" content. 
-
-This method will ensure that all dependencies and packages and installed correctly. 
-
-

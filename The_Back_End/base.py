@@ -29,16 +29,23 @@ def talker(res):
 
 @app.route('/')
 def hello_world():
-    payload = {"tester": "me"}
-    response = json.dumps(payload)
+    payload = {"tester": "me"} # plan to change me to a generated key for security purposes
+    response = json.dumps(payload) # converting the payload to a json format for the response
     talker(response) # sending a message to the talker on the server we connected to above
-    # converting the payload to a json format for the response
     return response
 
 
 @app.route('/up')
 def shoulderUp():
-    payload = {"shoulder": "w"}
+    payload = {"shoulder": "w"} # this payload is not intented to be changed at all
+    response = json.dumps(payload)
+    talker(response)
+    return response
+
+
+@app.route('/stop/wheel') # example json response for the wheel
+def wheelStop():
+    payload = {"wheel": "x"}
     response = json.dumps(payload)
     talker(response)
     return response
@@ -59,12 +66,6 @@ def shoulderStop():
     talker(response)
     return response
 
-@app.route('/stop/wheel') # example json response for the wheel
-def wheelStop():
-    payload = {"wheel": "x"}
-    response = json.dumps(payload)
-    talker(response)
-    return response
 
 @app.route('/end')
 def endShoulder():

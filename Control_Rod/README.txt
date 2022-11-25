@@ -1,13 +1,14 @@
 Instructions to run:
 
-Open VS code
-Open terminal in VS code
-run the commands: 
+CD into the control rod directory
+run 'npm install'
+This will take a minute or two
+After which, run
+'npx expo start'
 
-cd FrontEndNew
-npm start you can also use: npx expo start
+from which you can scan the qr code in expo go or through your native qr scanner.
 
-press "w" when prompted. 
+
 
 If needed, update npx expo webpack with command:
 First exit out of front end server with CTRL + C and then copy command and paste into terminal
@@ -19,8 +20,3 @@ press "w" when promted.
 
 If successful, continue onto press "a" for android if you already have an emulator or scan QR 
 with Expo Go app.
-
-
-
-
-

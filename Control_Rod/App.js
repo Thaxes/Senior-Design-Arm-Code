@@ -1,14 +1,35 @@
-import React from 'react';
-import { StyleSheet, Button, View, SafeAreaView, Text, Alert, TouchableOpacity,} from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  Button,
+  View,
+  SafeAreaView,
+  Text,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 
-const Separator = () => (
-  <View style={styles.separator} />
-);
+const Separator = () => <View style={styles.separator} />;
 
+const fetcher = async (endpoint) => {
+  console.log(endpoint);
+  try {
+    let response = await fetch(`http://10.0.2.2:5000/${endpoint}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Error! status: ${response.status}`);
+    }
+    const result = await response.json();
 
-
-
-
+    console.log("result is: ", JSON.stringify(result, null, 4));
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const App = () => (
   <SafeAreaView style={styles.container}>
@@ -16,12 +37,7 @@ const App = () => (
       <Text style={styles.title}>
         This is the up button that will be sending a response to the backend.
       </Text>
-      <AppButton
-        title="🔼"
-        
-        onPress={() => Alert.alert('Up Button')}
-        // onPress={fetch(localhost:5000/up)} Jake's code
-      />
+      <AppButton title="🔼" onPress={() => fetcher("shoulder/up")} />
     </View>
     <Separator />
     <View>
@@ -31,30 +47,20 @@ const App = () => (
       <AppButton
         title="🔽"
         color="#f194ff"
-        onPress={() => Alert.alert('Down Button')}
+        onPress={() => fetcher("shoulder/down")}
       />
     </View>
     <Separator />
-    
+
     <Separator />
     <View>
-      <Text style={styles.title}>
-        
-      </Text>
+      <Text style={styles.title}></Text>
       <View style={styles.fixToText}>
-        
-        <StopButton
-          title="STOP"
-          onPress={() => Alert.alert('Re-Rassor Rover will now STOP. Please wait.')}
-          
-          
-
-        />
+        <StopButton title="STOP" onPress={() => fetcher("shoulder/stop")} />
       </View>
     </View>
   </SafeAreaView>
 );
-
 
 //
 
@@ -72,31 +78,29 @@ const StopButton = ({ onPress, title }) => (
   </TouchableOpacity>
 );
 
-const styles = StyleSheet.create({ //this aligns the margins
+const styles = StyleSheet.create({
+  //this aligns the margins
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     marginHorizontal: 20,
-    
-    
   },
-  title: { //this aligns the text that is visible
-    textAlign: 'center',
+  title: {
+    //this aligns the text that is visible
+    textAlign: "center",
     marginVertical: 20,
-    
   },
   fixToText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   separator: {
     marginVertical: 8,
-    borderBottomColor: '#737373',
+    borderBottomColor: "#737373",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
- Button: {
-  
- },appButtonContainer: {
+  Button: {},
+  appButtonContainer: {
     elevation: 8,
     backgroundColor: "#48a5bd",
     borderRadius: 10,
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({ //this aligns the margins
     color: "#fff",
     fontWeight: "bold",
     alignSelf: "center",
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   stopButtonContainer: {
     elevation: 8,
@@ -116,14 +120,12 @@ const styles = StyleSheet.create({ //this aligns the margins
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    position: 'relative',
-    flex: 1
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    position: "relative",
+    flex: 1,
   },
 });
-  
-
 
 export default App;

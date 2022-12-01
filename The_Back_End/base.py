@@ -6,7 +6,10 @@ import json
 app = Flask(__name__)
 
 print("Hello world!")
-connected = False
+connected = False  # if the backend is connected and talking to the ROS publisher
+host = '10.42.0.1'  # the socket server address
+port = 5000  # socket server port number
+client_socket = socket.socket()  # instantiate
 
 
 def talker(res):
@@ -14,34 +17,35 @@ def talker(res):
     message = res
     if (connected):
         try:
+           # send the message if the backend thinks it is still connected to the ROS
             client_socket.send(message.encode())
         except Exception as e:
             print(e)
+            print("Connection failed. Reset this and ROS.")
             connected = False
     else:  # if not connected to the ros
         print("Attempting connection")
         try:
-            host = '10.42.0.1'  # the socket server address
-            port = 5000  # socket server port number
-            client_socket = socket.socket()  # instantiate
             client_socket.connect((host, port))  # connect to the server
             connected = True
             client_socket.send(message.encode())
         except Exception as e:
             print(e)
+            print("Couldn't connect to ROS")
             # [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
         print(message)
 
 
 @app.route('/')
 def hello_world():
-    # plan to change me to a generated key for security purposes
-    payload = {"tester": "me"}
+    # the password key to stop random programs from attempting a connection to any open port
+    # could change password to an actual password, but it seems unlikely that the ROS is going to be left open enough for a password cracker to realistically crack the key
+    payload = {"tester": "MyP@s5w0rd"}
     # converting the payload to a json format for the response
     response = json.dumps(payload)
     # sending a message to the talker on the server we connected to above
     talker(response)
-    return response
+    return response  # returning the payload to the frontend
 
 
 @app.route('/shoulder/up')
@@ -53,7 +57,7 @@ def shoulderUp():
     return response
 
 
-@app.route('/stop/wheel')  # example json response for the wheel
+@app.route('/wheel/stop')  # example json response for the wheel
 def wheelStop():
     payload = {"wheel": "x"}
     response = json.dumps(payload)
@@ -79,8 +83,9 @@ def shoulderStop():
 
 @app.route('/end')
 def endShoulder():
+    # the decode for the ROS seems to be having an issue decoding input 3-9 long for the second half of the json
     payload = {"tester": "goodnight"}
     response = json.dumps(payload)
     talker(response)
-    client_socket.close()
+    # client_socket.close()
     return response

@@ -6,6 +6,8 @@ import json
 app = Flask(__name__)
 
 print("Hello world!")
+
+
 connected = False  # if the backend is connected and talking to the ROS publisher
 host = '10.42.0.1'  # the socket server address
 port = 5000  # socket server port number
@@ -37,7 +39,7 @@ def talker(res):
 
 
 @app.route('/')
-def hello_world():
+def hello_world():  # this function can be called manually but doesn't need to be
     # the password key to stop random programs from attempting a connection to any open port
     # could change password to an actual password, but it seems unlikely that the ROS is going to be left open enough for a password cracker to realistically crack the key
     payload = {"tester": "MyP@s5w0rd"}
@@ -83,9 +85,12 @@ def shoulderStop():
 
 @app.route('/end')
 def endShoulder():
-    # the decode for the ROS seems to be having an issue decoding input 3-9 long for the second half of the json
+    # lets the ros know to close the connection
     payload = {"tester": "goodnight"}
     response = json.dumps(payload)
     talker(response)
-    # client_socket.close()
     return response
+
+
+hello_world()
+# automatically send the hello message/password to the ROS
